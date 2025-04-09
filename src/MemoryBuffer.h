@@ -68,13 +68,6 @@ public:
     explicit MemoryBuffer(size_t size);
 
     /**
-     * @brief Destructor that frees the allocated memory.
-     *
-     * The destructor automatically frees the memory allocated for the buffer when the object is destroyed.
-     */
-    ~MemoryBuffer();
-
-    /**
      * @brief Returns a pointer to the allocated memory buffer.
      *
      * @return A pointer to the allocated memory, or `nullptr` if memory allocation failed.
@@ -96,8 +89,8 @@ public:
     bool isAllocated();
 
 private:
-    size_t size_;                       // Size of the allocated buffer
-    std::unique_ptr<uint8_t[]> buffer_; // Pointer to the allocated buffer
+    size_t size_;
+    std::unique_ptr<uint8_t[]> buffer_;
 };
 
 #endif // MEMORYBUFFER_H
