@@ -1,6 +1,6 @@
 # LGFX-ScreenShot
 
-[![PlatformIO Registry](https://badges.registry.platformio.org/packages/celliesprojects/library/LGFX-ScreenShot.svg)](https://registry.platformio.org/libraries/celliesprojects/LGFX-ScreenShot)
+[![PlatformIO Registry](https://badges.registry.platformio.org/packages/celliesprojects/library/LGFX-ScreenShot.svg)](https://registry.platformio.org/libraries/celliesprojects/LGFX-ScreenShot) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/5c02977f0816457282ce90c3e4dc6153)](https://app.codacy.com/gh/CelliesProjects/LGFX-ScreenShot/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
 This library allows you to take **screenshots** of a **16-bit RGB565** **`LGFX_Sprite`** or **`LGFXBase`** display and **save them as 24-bit RGB888 BMP files** on the SD card.  
 No more need to deal with the poorly supported RGB565 image format any more.
