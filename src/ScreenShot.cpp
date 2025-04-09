@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "ScreenShot.hpp"
+#include "ScreenShot.h"
 
 bool ScreenShot::writeHeader(const lgfx::LGFXBase &gfx, File &file)
 {
