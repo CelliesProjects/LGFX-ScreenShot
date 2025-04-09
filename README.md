@@ -12,14 +12,14 @@ Currently the library only accepts **RGB565** sources.
 
 ## Features
 
--  Saves **16-bit RGB565** sources as **24-bit RGB888**
--  Supports both **`LGFX_Sprite`** and **`LGFXBase`** sources
+-  Saves **16-bit RGB565** sources as **24-bit RGB888**  
+-  Supports both **`LGFX_Sprite`** and **`LGFXBase`** sources  
 
 ## Requirements
 
--  ESP32 (any variant with psram)
--  LovyanGFX
--  SD card (connected via SPI)
+-  ESP32 (any variant with psram)  
+-  LovyanGFX  
+-  SD card (connected via SPI)  
 
 ## Installation
 
