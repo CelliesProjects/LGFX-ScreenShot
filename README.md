@@ -3,11 +3,10 @@
 [![PlatformIO Registry](https://badges.registry.platformio.org/packages/celliesprojects/library/LGFX-ScreenShot.svg)](https://registry.platformio.org/libraries/celliesprojects/LGFX-ScreenShot) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/5c02977f0816457282ce90c3e4dc6153)](https://app.codacy.com/gh/CelliesProjects/LGFX-ScreenShot/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
 This library allows you to take **screenshots** of a **16-bit RGB565** **`LGFX_Sprite`** or **`LGFXBase`** display and **save them as 24-bit RGB888 BMP files** on the SD card.  
-No more need to deal with the poorly supported RGB565 image format any more.
 
 Designed for ESP32 devices using [LovyanGFX](https://github.com/lovyan03/LovyanGFX).
 
-Psram and LovyanGFX are needed to run this library.  
+Psram and LovyanGFX are required to run this library.  
 Currently the library only accepts **RGB565** sources.
 
 ## Features
@@ -21,22 +20,12 @@ Currently the library only accepts **RGB565** sources.
 - LovyanGFX  
 - SD card (connected via SPI)  
 
-## Installation
-
-Clone into your `lib/` folder or install via PlatformIO:
-
-```ini
-lib_deps =
-    lovyan03/LovyanGFX@^1.2.0
-    CelliesProjects/ScreenShot@^1.0.0
-```
-
 ## How to use
 
 - Do **not** mount the sd card in advance, mounting and unmounting is handled by the library.  
 - A `String` has to be passed in with `saveBMP` which returns an error message or returns unchanged.  
 
-## Example code
+### Example code
 
 ```c++
 #include <Arduino.h>
