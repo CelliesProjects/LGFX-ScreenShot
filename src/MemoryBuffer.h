@@ -25,6 +25,7 @@ SOFTWARE.
 #define MEMORYBUFFER_H
 
 #include <Arduino.h>
+#include <memory>
 
 /**
  * @class MemoryBuffer
@@ -95,8 +96,8 @@ public:
     bool isAllocated();
 
 private:
-    size_t size_;     // Size of the allocated buffer
-    uint8_t *buffer_; // Pointer to the allocated buffer
+    size_t size_;                       // Size of the allocated buffer
+    std::unique_ptr<uint8_t[]> buffer_; // Pointer to the allocated buffer
 };
 
 #endif // MEMORYBUFFER_H
