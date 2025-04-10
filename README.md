@@ -4,7 +4,7 @@
 [![Release](https://img.shields.io/github/v/release/CelliesProjects/lgfx-screenshot)](https://github.com/CelliesProjects/lgfx-screenshot/releases/latest)
 [![Issues](https://img.shields.io/github/issues/CelliesProjects/lgfx-screenshot)](https://github.com/CelliesProjects/lgfx-screenshot/issues)
 [![Last Commit](https://img.shields.io/github/last-commit/CelliesProjects/lgfx-screenshot)](https://github.com/CelliesProjects/lgfx-screenshot/commits)
-[![PlatformIO](https://img.shields.io/badge/PlatformIO-Compatible-green?logo=platformio)](https://platformio.org/)
+[![PlatformIO](https://img.shields.io/badge/PlatformIO-Compatible-green?logo=platformio)](https://registry.platformio.org/libraries/celliesprojects/lgfx-ScreenShot)
 [![Arduino](https://img.shields.io/badge/Arduino-ESP32-blue?logo=arduino)](https://www.arduino.cc/)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/5c02977f0816457282ce90c3e4dc6153)](https://app.codacy.com/gh/CelliesProjects/LGFX-ScreenShot/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
