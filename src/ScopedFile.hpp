@@ -30,26 +30,16 @@ SOFTWARE.
 class ScopedFile
 {
 public:
-    ScopedFile(const char *filename)
-    {
-        open(filename);
-    }
-    ScopedFile(const String &filename)
-    {
-        open(filename.c_str());
-    }
+    ScopedFile(const char *filename) { open(filename); }
+    ScopedFile(const String &filename) { open(filename.c_str()); }
+
+    File &get() { return file_; }
+    bool isValid() const { return file_; }
+
     ~ScopedFile()
     {
         if (file_)
             file_.close();
-    }
-    File &get()
-    {
-        return file_;
-    }
-    bool isValid() const
-    {
-        return file_;
     }
 
     ScopedFile(const ScopedFile &) = delete;
@@ -59,10 +49,7 @@ public:
 
 private:
     File file_;
-    void open(const char *filename)
-    {
-        file_ = SD.open(filename, FILE_WRITE);
-    }
+    void open(const char *filename) { file_ = SD.open(filename, FILE_WRITE); }
 };
 
 #endif // SCOPEDFILE_H
