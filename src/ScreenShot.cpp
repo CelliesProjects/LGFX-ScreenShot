@@ -121,7 +121,7 @@ bool ScreenShot::saveBMP(const char *filename, lgfx::LGFXBase &gfx, FS &filesyst
         return false;
     }
 
-    ScopedFile scopedFile(filename);
+    ScopedFile scopedFile(filename, filesystem);
     if (!scopedFile.isValid())
     {
         result = "Failed to open file";

@@ -21,35 +21,32 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-#ifndef SCOPEDFILE_H
-#define SCOPEDFILE_H
+#ifndef SCOPEDFILE_HPP
+#define SCOPEDFILE_HPP
 
 #include <Arduino.h>
-#include <SD.h>
+#include <FS.h>
 
 class ScopedFile
 {
 public:
-    ScopedFile(const char *filename) { open(filename); }
-    ScopedFile(const String &filename) { open(filename.c_str()); }
+    ScopedFile(const char *filename, FS &fs)
+        : file_(fs.open(filename, FILE_WRITE)) {}
+
+    ScopedFile(const String &filename, FS &fs)
+        : file_(fs.open(filename.c_str(), FILE_WRITE)) {}
 
     File &get() { return file_; }
     bool isValid() const { return file_; }
 
-    ~ScopedFile()
-    {
-        if (file_)
-            file_.close();
-    }
-
+    // Rule of 5: prevent copying, but moves are fine
     ScopedFile(const ScopedFile &) = delete;
     ScopedFile &operator=(const ScopedFile &) = delete;
-    ScopedFile(ScopedFile &&) = delete;
-    ScopedFile &operator=(ScopedFile &&) = delete;
+    ScopedFile(ScopedFile &&) = default;
+    ScopedFile &operator=(ScopedFile &&) = default;
 
 private:
     File file_;
-    void open(const char *filename) { file_ = SD.open(filename, FILE_WRITE); }
 };
 
 #endif // SCOPEDFILE_H
