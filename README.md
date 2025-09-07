@@ -57,10 +57,11 @@ void setup()
     if (!SD.begin(SDCARD_SS))
     {
         Serial.println("SD Card mount failed");
-        return;
+        while (true)
+            delay(100);
     }
 
-    String error; // returns an error message or returns unchanged on success
+    String error; // returns an error message or unchanged on success
 
     const bool success = screenShot.saveBMP("/screenshot.bmp", display, SD, error);
 
