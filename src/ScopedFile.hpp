@@ -21,35 +21,48 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-#include "ScopedFile.h"
+#ifndef SCOPEDFILE_H
+#define SCOPEDFILE_H
 
-ScopedFile::ScopedFile(const char *filename)
-{
-    open(filename);
-}
+#include <Arduino.h>
+#include <SD.h>
 
-ScopedFile::ScopedFile(const String &filename)
+class ScopedFile
 {
-    open(filename.c_str());
-}
+public:
+    ScopedFile(const char *filename)
+    {
+        open(filename);
+    }
+    ScopedFile(const String &filename)
+    {
+        open(filename.c_str());
+    }
+    ~ScopedFile()
+    {
+        if (file_)
+            file_.close();
+    }
+    File &get()
+    {
+        return file_;
+    }
+    bool isValid() const
+    {
+        return file_;
+    }
 
-ScopedFile::~ScopedFile()
-{
-    if (file_)
-        file_.close();
-}
+    ScopedFile(const ScopedFile &) = delete;
+    ScopedFile &operator=(const ScopedFile &) = delete;
+    ScopedFile(ScopedFile &&) = delete;
+    ScopedFile &operator=(ScopedFile &&) = delete;
 
-File &ScopedFile::get()
-{
-    return file_;
-}
+private:
+    File file_;
+    void open(const char *filename)
+    {
+        file_ = SD.open(filename, FILE_WRITE);
+    }
+};
 
-bool ScopedFile::isValid() const
-{
-    return file_;
-}
-
-void ScopedFile::open(const char *filename)
-{
-    file_ = SD.open(filename, FILE_WRITE);
-}
+#endif // SCOPEDFILE_H

@@ -33,7 +33,7 @@ SOFTWARE.
 #include <Arduino.h>
 #include <LovyanGFX.h>
 #include "MemoryBuffer.h"
-#include "ScopedFile.h"
+#include "ScopedFile.hpp"
 
 /**
  * @class ScreenShot

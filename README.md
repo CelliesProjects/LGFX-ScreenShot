@@ -24,9 +24,9 @@ Currently the library only accepts **RGB565** sources.
 
 - ESP32 (any variant with psram)  
 - LovyanGFX  
-- SD card (connected via SPI)  
+- A mounted filesystem 
 
-### Example code
+### Example code - save a screenshot
 
 ```c++
 #include <Arduino.h>
@@ -61,7 +61,7 @@ void setup()
     const bool success = screenShot.saveBMP("/screenshot.bmp", display, SD, error);
 
     if (!success)
-        Serial.println(error); // e.g. "file open failed"
+        Serial.println(error); // e.g. "Display does not support readPixel()"
     else
         Serial.println("Saved image");
 }
