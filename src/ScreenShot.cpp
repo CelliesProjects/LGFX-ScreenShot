@@ -24,7 +24,7 @@ SOFTWARE.
 
 #include "ScreenShot.h"
 
-bool ScreenShot::writeHeader(const lgfx::LGFXBase &gfx, File &file)
+bool ScreenShot::writeHeader(lgfx::LGFXBase &gfx, File &file)
 {
     uint8_t header[54] = {0}; // BMP header (54 bytes)
     // BMP File Header (14 bytes)
@@ -117,14 +117,14 @@ bool ScreenShot::saveBMP(const char *filename, lgfx::LGFXBase &gfx, FS &filesyst
     MemoryBuffer rowBuffer(gfx.width() * 3);
     if (!rowBuffer.isAllocated())
     {
-        result = "Row buffer allocation failed";
+        result = "Failed to allocate row buffer";
         return false;
     }
 
     ScopedFile scopedFile(filename);
     if (!scopedFile.isValid())
     {
-        result = "SD Card mount or file open failed";
+        result = "Failed to open file";
         return false;
     }
 

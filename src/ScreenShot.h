@@ -31,9 +31,7 @@ SOFTWARE.
 #define SCREENSHOT_H
 
 #include <Arduino.h>
-#include <SD.h>
 #include <LovyanGFX.h>
-
 #include "MemoryBuffer.h"
 #include "ScopedFile.h"
 
@@ -48,8 +46,8 @@ public:
     bool saveBMP(const String &filename, lgfx::LGFXBase &gfx, FS &filesystem, String &error);
 
 private:
-    static bool writeHeader(const lgfx::LGFXBase &gfx, File &file);
-    static bool writePixelData(lgfx::LGFXBase &gfx, File &file, MemoryBuffer &buffer);
+    bool writeHeader(lgfx::LGFXBase &gfx, File &file);
+    bool writePixelData(lgfx::LGFXBase &gfx, File &file, MemoryBuffer &buffer);
 };
 
 #endif // SCREENSHOT_H
