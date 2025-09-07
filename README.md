@@ -26,11 +26,6 @@ Currently the library only accepts **RGB565** sources.
 - LovyanGFX  
 - SD card (connected via SPI)  
 
-## How to use
-
-- Do **not** mount the sd card in advance, mounting and unmounting is handled by the library.  
-- A `String` has to be passed in with `saveBMP` which returns an error message or returns unchanged.  
-
 ### Example code
 
 ```c++
