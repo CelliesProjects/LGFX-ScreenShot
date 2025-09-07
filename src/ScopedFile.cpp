@@ -23,14 +23,12 @@ SOFTWARE.
 */
 #include "ScopedFile.h"
 
-ScopedFile::ScopedFile(const char *filename, uint8_t sdPin, uint32_t frequency)
-    : sdPin_(sdPin), frequency_(frequency)
+ScopedFile::ScopedFile(const char *filename)
 {
     open(filename);
 }
 
-ScopedFile::ScopedFile(const String &filename, uint8_t sdPin, uint32_t frequency)
-    : sdPin_(sdPin), frequency_(frequency)
+ScopedFile::ScopedFile(const String &filename)
 {
     open(filename.c_str());
 }
@@ -38,10 +36,7 @@ ScopedFile::ScopedFile(const String &filename, uint8_t sdPin, uint32_t frequency
 ScopedFile::~ScopedFile()
 {
     if (file_)
-    {
         file_.close();
-        SD.end();
-    }
 }
 
 File &ScopedFile::get()
@@ -56,10 +51,5 @@ bool ScopedFile::isValid() const
 
 void ScopedFile::open(const char *filename)
 {
-    if (!SD.begin(sdPin_, SPI, frequency_))
-    {
-        file_ = File();
-        return;
-    }
     file_ = SD.open(filename, FILE_WRITE);
 }

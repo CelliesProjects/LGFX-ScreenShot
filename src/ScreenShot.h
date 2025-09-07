@@ -44,62 +44,11 @@ SOFTWARE.
 class ScreenShot
 {
 public:
-    /**
-     * @brief Saves a given LGFX object as a 24-bit BMP file to the SD card.
-     *
-     * @param filename The path and filename to save the screenshot as (e.g., "/screenshot.bmp").
-     * @param gfx The LGFXBase object to capture.
-     * @param result A reference to a String to store the error message.
-     *
-     * @param sdPin \b `Optional` The GPIO pin connected to the SD card CS line.
-     * @param frequency \b `Optional` SPI frequency used for SD communication.
-     *
-     * @return true if successful, false if an error occurred
-     *
-     * -  \b `result` will contain error message.
-     *
-     * -  \b `result` will be empty on success.
-     */
-    bool saveBMP(const char *filename, lgfx::LGFXBase &gfx, String &result, uint8_t sdPin = SS, uint32_t frequency = 4000000);
-
-    /**
-     * @brief Overload of saveBMP accepting a String for the filename.
-     *
-     * @param filename The path and filename to save the screenshot as (e.g., "/screenshot.bmp").
-     * @param gfx The LGFXBase object to capture.
-     * @param result A reference to a String to store the error message.
-     *
-     * @param sdPin \b `Optional` The GPIO pin connected to the SD card CS line.
-     * @param frequency \b `Optional` SPI frequency used for SD communication.
-     *
-     * @return true if successful, false if an error occurred
-     *
-     * -  \b `result` will contain error message.
-     *
-     * -  \b `result` will be empty on success.
-     */
-    bool saveBMP(const String &filename, lgfx::LGFXBase &gfx, String &result, uint8_t sdPin = SS, uint32_t frequency = 4000000);
+    bool saveBMP(const char *filename, lgfx::LGFXBase &gfx, FS &filesystem, String &result);
+    bool saveBMP(const String &filename, lgfx::LGFXBase &gfx, FS &filesystem, String &error);
 
 private:
-    /**
-     * @brief Writes the BMP file header to the provided file.
-     *
-     * @param gfx The LGFXBase object for width and height information.
-     * @param file The File object to write the header to.
-     *
-     * @return true if the header was written successfully, false otherwise.
-     */
     static bool writeHeader(const lgfx::LGFXBase &gfx, File &file);
-
-    /**
-     * @brief Writes the pixel data to the provided file.
-     *
-     * @param gfx The LGFXBase object to read pixel data from.
-     * @param file The File object to write the pixel data to.
-     * @param buffer The MemoryBuffer used for row data.
-     *
-     * @return true if the pixel data was written successfully, false otherwise.
-     */
     static bool writePixelData(lgfx::LGFXBase &gfx, File &file, MemoryBuffer &buffer);
 };
 

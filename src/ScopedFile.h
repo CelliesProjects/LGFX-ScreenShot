@@ -30,8 +30,8 @@ SOFTWARE.
 class ScopedFile
 {
 public:
-    ScopedFile(const char *filename, uint8_t sdPin, uint32_t frequency);
-    ScopedFile(const String &filename, uint8_t sdPin, uint32_t frequency);
+    ScopedFile(const char *filename);
+    ScopedFile(const String &filename);
     ~ScopedFile();
 
     File &get();
@@ -44,8 +44,6 @@ public:
 
 private:
     File file_;
-    uint8_t sdPin_;
-    uint32_t frequency_;
     void open(const char *filename);
 };
 

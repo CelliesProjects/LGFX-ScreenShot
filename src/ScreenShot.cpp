@@ -94,14 +94,12 @@ bool ScreenShot::writePixelData(lgfx::LGFXBase &gfx, File &file, MemoryBuffer &b
     return true;
 }
 
-bool ScreenShot::saveBMP(const String &filename, lgfx::LGFXBase &gfx, String &result,
-                         uint8_t sdPin, uint32_t frequency)
+bool ScreenShot::saveBMP(const String &filename, lgfx::LGFXBase &gfx, FS &filesystem, String &result)
 {
-    return saveBMP(filename.c_str(), gfx, result, sdPin, frequency);
+    return saveBMP(filename.c_str(), gfx, filesystem, result);
 }
 
-bool ScreenShot::saveBMP(const char *filename, lgfx::LGFXBase &gfx, String &result,
-                         uint8_t sdPin, uint32_t frequency)
+bool ScreenShot::saveBMP(const char *filename, lgfx::LGFXBase &gfx, FS &filesystem, String &result)
 {
     if (gfx.getColorDepth() != 16)
     {
@@ -123,7 +121,7 @@ bool ScreenShot::saveBMP(const char *filename, lgfx::LGFXBase &gfx, String &resu
         return false;
     }
 
-    ScopedFile scopedFile(filename, sdPin, frequency);
+    ScopedFile scopedFile(filename);
     if (!scopedFile.isValid())
     {
         result = "SD Card mount or file open failed";
