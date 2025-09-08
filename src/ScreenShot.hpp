@@ -21,45 +21,32 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-#include "ScopedFile.h"
 
-ScopedFile::ScopedFile(const char *filename, uint8_t sdPin, uint32_t frequency)
-    : sdPin_(sdPin), frequency_(frequency)
-{
-    open(filename);
-}
+/**
+ * @file ScreenShot.h
+ * @brief Provides functionality to save LGFX sprites or screen content to a BMP file on SD card.
+ */
 
-ScopedFile::ScopedFile(const String &filename, uint8_t sdPin, uint32_t frequency)
-    : sdPin_(sdPin), frequency_(frequency)
-{
-    open(filename.c_str());
-}
+#ifndef SCREENSHOT_H
+#define SCREENSHOT_H
 
-ScopedFile::~ScopedFile()
+#include <Arduino.h>
+#include <FS.h>
+#include <LovyanGFX.h>
+#include "MemoryBuffer.h"
+/**
+ * @class ScreenShot
+ * @brief A utility class for saving LGFX screen or sprite data as BMP files to a mounted filesystem.
+ */
+class ScreenShot
 {
-    if (file_)
-    {
-        file_.close();
-        SD.end();
-    }
-}
+public:
+    bool saveBMP(const char *filename, lgfx::LGFXBase &gfx, FS &filesystem, String &result);
+    bool saveBMP(const String &filename, lgfx::LGFXBase &gfx, FS &filesystem, String &error);
 
-File &ScopedFile::get()
-{
-    return file_;
-}
+private:
+    bool writeBMPHeader(lgfx::LGFXBase &gfx, File &file);
+    bool writeBMPPixelData(lgfx::LGFXBase &gfx, File &file, MemoryBuffer &buffer);
+};
 
-bool ScopedFile::isValid() const
-{
-    return file_;
-}
-
-void ScopedFile::open(const char *filename)
-{
-    if (!SD.begin(sdPin_, SPI, frequency_))
-    {
-        file_ = File();
-        return;
-    }
-    file_ = SD.open(filename, FILE_WRITE);
-}
+#endif // SCREENSHOT_H

@@ -8,7 +8,7 @@
 [![Arduino](https://img.shields.io/badge/Arduino-ESP32-blue?logo=arduino)](https://www.arduino.cc/)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/5c02977f0816457282ce90c3e4dc6153)](https://app.codacy.com/gh/CelliesProjects/LGFX-ScreenShot/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
-This library allows you to take **screenshots** of a **16-bit RGB565** **`LGFX_Sprite`** or **`LGFX_Device`** display and **save them as 24-bit RGB888 BMP files** on the SD card.  
+This library allows you to take **screenshots** of a **16-bit RGB565** **`LGFX_Sprite`** or **`LGFX_Device`** display and **save these as 24-bit RGB888 BMP files** on a mounted filesystem.  
 
 Designed for ESP32 devices using [LovyanGFX](https://github.com/lovyan03/LovyanGFX).
 
@@ -23,47 +23,63 @@ Currently the library only accepts **RGB565** sources.
 ## Requirements
 
 - ESP32 (any variant with psram)  
-- LovyanGFX  
-- SD card (connected via SPI)  
+- [LovyanGFX](https://github.com/lovyan03/LovyanGFX)  
+- A mounted filesystem 
 
-## How to use
-
-- Do **not** mount the sd card in advance, mounting and unmounting is handled by the library.  
-- A `String` has to be passed in with `saveBMP` which returns an error message or returns unchanged.  
-
-### Example code
+### Example code - save a screenshot
 
 ```c++
 #include <Arduino.h>
+#include <SD.h>
 #include <LovyanGFX.h>
 #include <LGFX_AUTODETECT.hpp>
 #include <ScreenShot.hpp>
+
+constexpr uint8_t SDCARD_SS = 4;
 
 LGFX display;
 ScreenShot screenShot;
 
 void setup()
 {
+    Serial.begin(115200);
+
     display.begin();
     display.setRotation(1);
     display.setBrightness(110);
     display.clear(TFT_YELLOW);
 
+    // mount SD card before using
+    if (!SD.begin(SDCARD_SS))
+        Serial.println("SD Card mount failed");
+
     String error; // returns an error message or returns unchanged on success
 
-    const bool success = screenShot.saveBMP("/screenshot.bmp", display, error);
-    
+    // save a screenshot from the display
+    bool success = screenShot.saveBMP("/screenshot.bmp", display, SD, error);
     if (!success)
-        Serial.println(error); // describes the error for example `SD Card mount or file open failed`
+        Serial.println(error); // e.g. "Display does not support readPixel()"
     else
-        Serial.println("Saved image");
+        Serial.println("Saved screen");
+
+    // save a screenshot from a sprite
+    LGFX_Sprite sprite;
+    sprite.setPsram(true);
+    sprite.createSprite(320, 240);
+    sprite.setFont(&DejaVu24);
+    sprite.drawCenterString("Sprite", sprite.width() / 2, sprite.height() / 2);
+
+    success = screenShot.saveBMP("/spriteshot.bmp", sprite, SD, error);
+    if (!success)
+        Serial.println(error); // e.g. "Failed to open file"
+    else
+        Serial.println("Saved sprite");
 }
 
 void loop()
 {
     delay(1000);
 }
-
 ```
 
 ## Known issues

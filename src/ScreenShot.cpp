@@ -22,9 +22,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "ScreenShot.h"
+#include "ScreenShot.hpp"
 
-bool ScreenShot::writeHeader(const lgfx::LGFXBase &gfx, File &file)
+bool ScreenShot::writeBMPHeader(lgfx::LGFXBase &gfx, File &file)
 {
     uint8_t header[54] = {0}; // BMP header (54 bytes)
     // BMP File Header (14 bytes)
@@ -71,7 +71,7 @@ bool ScreenShot::writeHeader(const lgfx::LGFXBase &gfx, File &file)
     return file.write(header, sizeof(header)) == sizeof(header);
 }
 
-bool ScreenShot::writePixelData(lgfx::LGFXBase &gfx, File &file, MemoryBuffer &buffer)
+bool ScreenShot::writeBMPPixelData(lgfx::LGFXBase &gfx, File &file, MemoryBuffer &buffer)
 {
     int w = gfx.width();
     int h = gfx.height();
@@ -94,14 +94,12 @@ bool ScreenShot::writePixelData(lgfx::LGFXBase &gfx, File &file, MemoryBuffer &b
     return true;
 }
 
-bool ScreenShot::saveBMP(const String &filename, lgfx::LGFXBase &gfx, String &result,
-                         uint8_t sdPin, uint32_t frequency)
+bool ScreenShot::saveBMP(const String &filename, lgfx::LGFXBase &gfx, FS &filesystem, String &result)
 {
-    return saveBMP(filename.c_str(), gfx, result, sdPin, frequency);
+    return saveBMP(filename.c_str(), gfx, filesystem, result);
 }
 
-bool ScreenShot::saveBMP(const char *filename, lgfx::LGFXBase &gfx, String &result,
-                         uint8_t sdPin, uint32_t frequency)
+bool ScreenShot::saveBMP(const char *filename, lgfx::LGFXBase &gfx, FS &filesystem, String &result)
 {
     if (gfx.getColorDepth() != 16)
     {
@@ -119,26 +117,24 @@ bool ScreenShot::saveBMP(const char *filename, lgfx::LGFXBase &gfx, String &resu
     MemoryBuffer rowBuffer(gfx.width() * 3);
     if (!rowBuffer.isAllocated())
     {
-        result = "Row buffer allocation failed";
+        result = "Failed to allocate row buffer";
         return false;
     }
 
-    ScopedFile scopedFile(filename, sdPin, frequency);
-    if (!scopedFile.isValid())
+    File file = filesystem.open(filename, FILE_WRITE);
+    if (!file)
     {
-        result = "SD Card mount or file open failed";
+        result = "Failed to open file";
         return false;
     }
 
-    File &file = scopedFile.get();
-
-    if (!writeHeader(gfx, file))
+    if (!writeBMPHeader(gfx, file))
     {
         result = "Failed to write bmp header";
         return false;
     }
 
-    if (!writePixelData(gfx, file, rowBuffer))
+    if (!writeBMPPixelData(gfx, file, rowBuffer))
     {
         result = "Failed to write pixel data";
         return false;
