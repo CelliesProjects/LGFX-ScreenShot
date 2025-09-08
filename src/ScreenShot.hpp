@@ -31,10 +31,9 @@ SOFTWARE.
 #define SCREENSHOT_H
 
 #include <Arduino.h>
+#include <FS.h>
 #include <LovyanGFX.h>
 #include "MemoryBuffer.h"
-#include "ScopedFile.hpp"
-
 /**
  * @class ScreenShot
  * @brief A utility class for saving LGFX screen or sprite data as BMP files to an SD card.

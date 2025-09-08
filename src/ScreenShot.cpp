@@ -121,14 +121,12 @@ bool ScreenShot::saveBMP(const char *filename, lgfx::LGFXBase &gfx, FS &filesyst
         return false;
     }
 
-    ScopedFile scopedFile(filename, filesystem);
-    if (!scopedFile.isValid())
+    File file = filesystem.open(filename, FILE_WRITE);
+    if (!file)
     {
         result = "Failed to open file";
         return false;
     }
-
-    File &file = scopedFile.get();
 
     if (!writeHeader(gfx, file))
     {
@@ -142,5 +140,5 @@ bool ScreenShot::saveBMP(const char *filename, lgfx::LGFXBase &gfx, FS &filesyst
         return false;
     }
 
-    return true;
+    return true; // file closed automatically when leaving scope
 }
