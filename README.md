@@ -68,7 +68,7 @@ void setup()
     sprite.setFont(&DejaVu24);
     sprite.drawCenterString("Sprite", sprite.width() / 2, sprite.height() / 2);        
 
-    const bool success = screenShot.saveBMP("/spriteshot.bmp", display, SD, error);
+    const bool success = screenShot.saveBMP("/spriteshot.bmp", sprite, SD, error);
     if (!success)
         Serial.println(error); // e.g. "Failed to open file"
     else
