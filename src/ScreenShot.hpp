@@ -36,7 +36,7 @@ SOFTWARE.
 #include "MemoryBuffer.h"
 /**
  * @class ScreenShot
- * @brief A utility class for saving LGFX screen or sprite data as BMP files to an SD card.
+ * @brief A utility class for saving LGFX screen or sprite data as BMP files to a mounted filesystem.
  */
 class ScreenShot
 {
@@ -45,8 +45,8 @@ public:
     bool saveBMP(const String &filename, lgfx::LGFXBase &gfx, FS &filesystem, String &error);
 
 private:
-    bool writeHeader(lgfx::LGFXBase &gfx, File &file);
-    bool writePixelData(lgfx::LGFXBase &gfx, File &file, MemoryBuffer &buffer);
+    bool writeBMPHeader(lgfx::LGFXBase &gfx, File &file);
+    bool writeBMPPixelData(lgfx::LGFXBase &gfx, File &file, MemoryBuffer &buffer);
 };
 
 #endif // SCREENSHOT_H

@@ -24,7 +24,7 @@ SOFTWARE.
 
 #include "ScreenShot.hpp"
 
-bool ScreenShot::writeHeader(lgfx::LGFXBase &gfx, File &file)
+bool ScreenShot::writeBMPHeader(lgfx::LGFXBase &gfx, File &file)
 {
     uint8_t header[54] = {0}; // BMP header (54 bytes)
     // BMP File Header (14 bytes)
@@ -71,7 +71,7 @@ bool ScreenShot::writeHeader(lgfx::LGFXBase &gfx, File &file)
     return file.write(header, sizeof(header)) == sizeof(header);
 }
 
-bool ScreenShot::writePixelData(lgfx::LGFXBase &gfx, File &file, MemoryBuffer &buffer)
+bool ScreenShot::writeBMPPixelData(lgfx::LGFXBase &gfx, File &file, MemoryBuffer &buffer)
 {
     int w = gfx.width();
     int h = gfx.height();
@@ -128,17 +128,17 @@ bool ScreenShot::saveBMP(const char *filename, lgfx::LGFXBase &gfx, FS &filesyst
         return false;
     }
 
-    if (!writeHeader(gfx, file))
+    if (!writeBMPHeader(gfx, file))
     {
         result = "Failed to write bmp header";
         return false;
     }
 
-    if (!writePixelData(gfx, file, rowBuffer))
+    if (!writeBMPPixelData(gfx, file, rowBuffer))
     {
         result = "Failed to write pixel data";
         return false;
     }
 
-    return true; // file closed automatically when leaving scope
+    return true;
 }
