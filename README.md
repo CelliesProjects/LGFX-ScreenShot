@@ -26,7 +26,7 @@ Currently the library only accepts **RGB565** sources.
 - [LovyanGFX](https://github.com/lovyan03/LovyanGFX)  
 - A mounted filesystem 
 
-### Example code - save a screenshot
+### Example code - save a BMP to SD card
 
 ```c++
 #include <Arduino.h>
