@@ -55,24 +55,23 @@ void setup()
 
     String error; // returns an error message or returns unchanged on success
 
-    const bool success = screenShot.saveBMP("/screenshot.bmp", display, SD, error);
+    bool success = screenShot.saveBMP("/screenshot.bmp", display, SD, error);
     if (!success)
         Serial.println(error); // e.g. "Display does not support readPixel()"
     else
-        Serial.println("Saved image");
+        Serial.println("Saved screen");
 
     LGFX_Sprite sprite;
-
     sprite.setPsram(true);
     sprite.createSprite(320, 240);
     sprite.setFont(&DejaVu24);
     sprite.drawCenterString("Sprite", sprite.width() / 2, sprite.height() / 2);        
 
-    const bool success = screenShot.saveBMP("/spriteshot.bmp", sprite, SD, error);
+    success = screenShot.saveBMP("/spriteshot.bmp", sprite, SD, error);
     if (!success)
         Serial.println(error); // e.g. "Failed to open file"
     else
-        Serial.println("Saved image");  
+        Serial.println("Saved sprite");  
 }
 
 void loop()
