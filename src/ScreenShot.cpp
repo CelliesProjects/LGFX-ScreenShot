@@ -28,21 +28,18 @@ bool ScreenShot::writeBMPHeader(lgfx::LGFXBase &gfx, File &file)
 {
     uint8_t header[54] = {0};
 
-    int32_t width = gfx.width();
-    int32_t height = gfx.height();
+    // BMP file header
+    header[0] = 'B';
+    header[1] = 'M';
 
     uint32_t biSizeImage = rowSize_ * gfx.height();
     uint32_t bfSize = 54 + biSizeImage;
     uint32_t bfOffBits = 54;
 
-    // BMP file header
-    header[0] = 'B';
-    header[1] = 'M';
-
     // BMP info header fields
     uint32_t biSize = 40;
-    int32_t biWidth = width;
-    int32_t biHeight = -height; // top-down bitmap
+    int32_t biWidth = gfx.width();
+    int32_t biHeight = -gfx.height(); // top-down bitmap
     uint16_t biPlanes = 1;
     uint16_t biBitCount = 24;   // RGB888
     uint32_t biCompression = 0; // BI_RGB
@@ -52,10 +49,10 @@ bool ScreenShot::writeBMPHeader(lgfx::LGFXBase &gfx, File &file)
     uint32_t biClrImportant = 0;
 
     // Little-endian writer
-    auto writeLE = [](uint8_t *buf, size_t off, uint32_t val, uint8_t size)
+    auto writeLE = [](uint8_t *buf, size_t offset, uint32_t val, uint8_t size)
     {
         for (uint8_t i = 0; i < size; ++i)
-            buf[off + i] = (val >> (8 * i)) & 0xFF;
+            buf[offset + i] = (val >> (8 * i)) & 0xFF;
     };
 
     writeLE(header, 2, bfSize, 4);
@@ -77,9 +74,9 @@ bool ScreenShot::writeBMPHeader(lgfx::LGFXBase &gfx, File &file)
 
 bool ScreenShot::writeBMPPixelData(lgfx::LGFXBase &gfx, File &file, MemoryBuffer &buffer)
 {
-    int w = gfx.width();
-    int h = gfx.height();
-    size_t pixelBytes = w * 3;
+    const int w = gfx.width();
+    const int h = gfx.height();
+    const size_t pixelBytes = w * 3;
     uint8_t *buf = buffer.get();
 
     for (int y = 0; y < h; ++y)
@@ -88,17 +85,16 @@ bool ScreenShot::writeBMPPixelData(lgfx::LGFXBase &gfx, File &file, MemoryBuffer
         for (int x = 0; x < w; ++x)
         {
             uint16_t color = gfx.readPixel(x, y);
-            // RGB565 → RGB888 (BMP is BGR)
-            *p++ = ((color >> 0) & 0x1F) * 255 / 31;  // B
-            *p++ = ((color >> 5) & 0x3F) * 255 / 63;  // G
-            *p++ = ((color >> 11) & 0x1F) * 255 / 31; // R
+            // RGB565 → RGB888 (BMP uses BGR order)
+            *p++ = ((color >> 0) & 0x1F) * 255 / 31;
+            *p++ = ((color >> 5) & 0x3F) * 255 / 63;
+            *p++ = ((color >> 11) & 0x1F) * 255 / 31;
         }
 
         // Zero BMP padding bytes
         if (rowSize_ > pixelBytes)
             memset(buf + pixelBytes, 0, rowSize_ - pixelBytes);
 
-        // Write padded row
         if (file.write(buf, rowSize_) != rowSize_)
             return false;
     }
@@ -116,6 +112,12 @@ bool ScreenShot::saveBMP(const char *filename, lgfx::LGFXBase &gfx, FS &filesyst
     if (gfx.getColorDepth() != 16)
     {
         result = "Only 16-bit color depth supported";
+        return false;
+    }
+
+    if (gfx.width() <= 0 || gfx.height() <= 0)
+    {
+        result = "Invalid display dimensions";
         return false;
     }
 
