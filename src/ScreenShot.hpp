@@ -33,7 +33,7 @@ SOFTWARE.
 #include <Arduino.h>
 #include <FS.h>
 #include <LovyanGFX.h>
-#include "MemoryBuffer.h"
+#include "MemoryBuffer.hpp"
 /**
  * @class ScreenShot
  * @brief A utility class for saving LGFX screen or sprite data as BMP files to a mounted filesystem.
