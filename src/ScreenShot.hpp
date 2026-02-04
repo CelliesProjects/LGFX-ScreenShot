@@ -47,6 +47,7 @@ public:
 private:
     bool writeBMPHeader(lgfx::LGFXBase &gfx, File &file);
     bool writeBMPPixelData(lgfx::LGFXBase &gfx, File &file, MemoryBuffer &buffer);
+    size_t rowSize_ = 0;    
 };
 
 #endif // SCREENSHOT_H
