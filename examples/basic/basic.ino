@@ -1,9 +1,10 @@
 #include <Arduino.h>
+#include <SD.h>
 #include <LovyanGFX.h>
 #include <LGFX_AUTODETECT.hpp>
 #include <ScreenShot.hpp>
 
-#define SDCARD_SS = 4;
+constexpr uint8_t SDCARD_SS = 4;
 
 LGFX display;
 ScreenShot screenShot;
