@@ -21,8 +21,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-#ifndef MEMORYBUFFER_H
-#define MEMORYBUFFER_H
+#ifndef MEMORYBUFFER_HPP
+#define MEMORYBUFFER_HPP
 
 #include <Arduino.h>
 #include <memory>
@@ -65,32 +65,45 @@ public:
      * // Example usage of the constructor
      * MemoryBuffer buffer(512);  // Allocates a buffer of 512 bytes
      */
-    explicit MemoryBuffer(size_t size);
+    explicit MemoryBuffer(size_t size) : size_(size)
+    {
+        if (size_ > 0)
+            buffer_ = std::unique_ptr<uint8_t[]>(new (std::nothrow) uint8_t[size]);
+    }
 
     /**
      * @brief Returns a pointer to the allocated memory buffer.
      *
      * @return A pointer to the allocated memory, or `nullptr` if memory allocation failed.
      */
-    uint8_t *get();
+    uint8_t *get()
+    {
+        return buffer_.get();
+    }
 
     /**
      * @brief Returns the size of the allocated buffer.
      *
      * @return The size of the allocated buffer in bytes.
      */
-    size_t size() const;
+    size_t size() const
+    {
+        return size_;
+    }
 
     /**
      * @brief Checks whether memory allocation was successful.
      *
      * @return `true` if memory was successfully allocated, `false` if the buffer is `nullptr`.
      */
-    bool isAllocated();
+    bool isAllocated()
+    {
+        return buffer_.get() != nullptr;
+    }
 
 private:
     size_t size_;
     std::unique_ptr<uint8_t[]> buffer_;
 };
 
-#endif // MEMORYBUFFER_H
+#endif // MEMORYBUFFER_HPP
