@@ -129,7 +129,7 @@ bool ScreenShot::saveBMP(const char *filename, lgfx::LGFXBase &gfx, FS &filesyst
         return false;
     }
 
-    // RGB888 row data needs to be 4byte aligned
+    // RGB888 row data needs to be 4 byte aligned and padded
     rowSize_ = (gfx.width() * 3 + 3) & ~3;
     MemoryBuffer pixelBuffer(rowSize_);
     if (!pixelBuffer.isAllocated())
