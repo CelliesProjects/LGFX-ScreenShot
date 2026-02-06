@@ -8,7 +8,8 @@
 [![Arduino](https://img.shields.io/badge/Arduino-ESP32-blue?logo=arduino)](https://www.arduino.cc/)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/5c02977f0816457282ce90c3e4dc6153)](https://app.codacy.com/gh/CelliesProjects/LGFX-ScreenShot/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
-This library allows you to take **screenshots** of a **16-bit RGB565** **`LGFX_Sprite`** or **`LGFX_Device`** display and **save these as 24-bit RGB888 BMP files** on a mounted filesystem.  
+This library allows you to take **screenshots** of a **16-bit RGB565 LGFX_Sprite** or **LGFX_Device** display and **save these as 24-bit RGB888 BMP files** on a mounted filesystem.  
+I wrote this library because the **RGB565** format is almost unsupported on pc.
 
 Designed for ESP32 devices using [LovyanGFX](https://github.com/lovyan03/LovyanGFX).
 
@@ -18,7 +19,7 @@ Currently the library only accepts **RGB565** sources.
 ## Features
 
 - Saves **16-bit RGB565** sources as **24-bit RGB888**  
-- Supports both **`LGFX_Sprite`** and **`LGFX_Device`** sources  
+- Supports both **LGFX_Sprite** and **LGFX_Device** sources  
 
 ## Requirements
 
@@ -84,7 +85,5 @@ void loop()
 
 ## Known issues
 
-- Some displays have hardware issues that prevent them from reading pixeldata.  
-These will return `false` and a `Display does not support readPixel()` error message.  
-- Currently the library only accepts **RGB565** sources.
-
+- Some displays have no MISO pin connected or exposed, preventing them from reading pixeldata.  
+On a call to `saveBMP()` these displays will return `false` and a `Display does not support readPixel()` error message.  

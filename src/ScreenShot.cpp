@@ -103,29 +103,29 @@ bool ScreenShot::writeBMPPixelData(lgfx::LGFXBase &gfx, File &file, MemoryBuffer
     return true;
 }
 
-bool ScreenShot::saveBMP(const String &filename, lgfx::LGFXBase &gfx, FS &filesystem, String &result)
+bool ScreenShot::saveBMP(const String &filename, lgfx::LGFXBase &gfx, FS &filesystem, String &error)
 {
-    return saveBMP(filename.c_str(), gfx, filesystem, result);
+    return saveBMP(filename.c_str(), gfx, filesystem, error);
 }
 
-bool ScreenShot::saveBMP(const char *filename, lgfx::LGFXBase &gfx, FS &filesystem, String &result)
+bool ScreenShot::saveBMP(const char *filename, lgfx::LGFXBase &gfx, FS &filesystem, String &error)
 {
     if (gfx.getColorDepth() != 16)
     {
-        result = "Only 16-bit color depth supported";
+        error = "Only 16-bit color depth supported";
         return false;
     }
 
     if (gfx.width() <= 0 || gfx.height() <= 0)
     {
-        result = "Invalid display dimensions";
+        error = "Invalid display dimensions";
         return false;
     }
 
     const lgfx::LGFX_Device *dev = static_cast<lgfx::LGFX_Device *>(&gfx);
     if (dev && dev->panel() && !dev->panel()->isReadable())
     {
-        result = "Display does not support readPixel()";
+        error = "Display does not support readPixel()";
         return false;
     }
 
@@ -134,26 +134,26 @@ bool ScreenShot::saveBMP(const char *filename, lgfx::LGFXBase &gfx, FS &filesyst
     MemoryBuffer pixelBuffer(rowSize_);
     if (!pixelBuffer.isAllocated())
     {
-        result = "Failed to allocate pixel buffer";
+        error = "Failed to allocate pixel buffer";
         return false;
     }
 
     File file = filesystem.open(filename, FILE_WRITE);
     if (!file)
     {
-        result = "Failed to open file";
+        error = "Failed to open file";
         return false;
     }
 
     if (!writeBMPHeader(gfx, file))
     {
-        result = "Failed to write bmp header";
+        error = "Failed to write bmp header";
         return false;
     }
 
     if (!writeBMPPixelData(gfx, file, pixelBuffer))
     {
-        result = "Failed to write pixel data";
+        error = "Failed to write pixel data";
         return false;
     }
 
