@@ -41,7 +41,7 @@ SOFTWARE.
 class ScreenShot
 {
 public:
-    bool saveBMP(const char *filename, lgfx::LGFXBase &gfx, FS &filesystem, String &result);
+    bool saveBMP(const char *filename, lgfx::LGFXBase &gfx, FS &filesystem, String &error);
     bool saveBMP(const String &filename, lgfx::LGFXBase &gfx, FS &filesystem, String &error);
 
 private:
