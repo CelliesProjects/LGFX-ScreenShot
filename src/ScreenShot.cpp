@@ -61,21 +61,21 @@ bool ScreenShot::writeBMPHeader(lgfx::LGFXBase &gfx, File &file, size_t &headerS
     };
 
     // BITMAPFILEHEADER
-    writeLE(header, 2, bfSize, 4);     // bfSize
-    writeLE(header, 10, bfOffBits, 4); // bfOffBits
+    writeLE(header, 2, bfSize, 4);     // file size
+    writeLE(header, 10, bfOffBits, 4); // pixel data offset
 
     // BITMAPINFOHEADER
-    writeLE(header, 14, biSize, 4);
-    writeLE(header, 18, biWidth, 4);
-    writeLE(header, 22, biHeight, 4);
-    writeLE(header, 26, biPlanes, 2);
-    writeLE(header, 28, biBitCount, 2);
-    writeLE(header, 30, biCompression, 4);
-    writeLE(header, 34, biSizeImage, 4);
-    writeLE(header, 38, biXPelsPerMeter, 4);
-    writeLE(header, 42, biYPelsPerMeter, 4);
-    writeLE(header, 46, biClrUsed, 4);
-    writeLE(header, 50, biClrImportant, 4);
+    writeLE(header, 14, biSize, 4);          // Info header size
+    writeLE(header, 18, biWidth, 4);         // Image width
+    writeLE(header, 22, biHeight, 4);        // Image height (negative for top-down)
+    writeLE(header, 26, biPlanes, 2);        // Number of planes (always 1)
+    writeLE(header, 28, biBitCount, 2);      // Bits per pixel (24-bit RGB)
+    writeLE(header, 30, biCompression, 4);   // Compression (0 = none)
+    writeLE(header, 34, biSizeImage, 4);     // Image size in bytes
+    writeLE(header, 38, biXPelsPerMeter, 4); // Horizontal resolution (not used)
+    writeLE(header, 42, biYPelsPerMeter, 4); // Vertical resolution (not used)
+    writeLE(header, 46, biClrUsed, 4);       // Colors in palette (not used)
+    writeLE(header, 50, biClrImportant, 4);  // Important colors (not used)
 
     headerSize = BMP_HEADER_SIZE;
     return file.write(header, headerSize) == headerSize;
