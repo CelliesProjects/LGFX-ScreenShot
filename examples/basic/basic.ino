@@ -20,20 +20,27 @@ void setup()
 
     // Mount SD card before using
     if (!SD.begin(SDCARD_SS))
-    {
         Serial.println("SD Card mount failed");
-        while (true)
-            delay(100);
-    }
 
-    String error; // returns an error message or unchanged on success
-
-    const bool success = screenShot.saveBMP("/screenshot.bmp", display, SD, error);
-
-    if (!success)
-        Serial.println(error); // e.g. "file open failed"
+    // save a screenshot from the display
+    auto result = screenShot.saveBMP("/screenshot.bmp", display, SD);
+    if (!result.ok())
+        Serial.println(screenShotErrorString(result.error));
     else
-        Serial.println("Saved image");
+        Serial.printf("Saved screenshot: %u bytes\n", result.bytesWritten);
+
+    // save a screenshot from a sprite
+    LGFX_Sprite sprite;
+    sprite.setPsram(true);
+    sprite.createSprite(319, 213);
+    sprite.setFont(&DejaVu24);
+    sprite.drawCenterString("Sprite", sprite.width() / 2, sprite.height() / 2);
+
+    result = screenShot.saveBMP("/spriteshot.bmp", sprite, SD);
+    if (!result.ok())
+        Serial.println(screenShotErrorString(result.error));
+    else
+        Serial.printf("Saved spriteshot: %u bytes\n", result.bytesWritten);
 }
 
 void loop()
