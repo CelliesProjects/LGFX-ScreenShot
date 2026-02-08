@@ -83,5 +83,7 @@ void loop()
 
 ## Known issues
 
-- Some displays have no MISO pin connected or exposed, preventing them from reading pixeldata.  
-On a call to `saveBMP()` these displays will return `false` and a `Display does not support readPixel()` error message.  
+- Not all displays support pixel readback.  
+  Screenshot capture requires `readPixel()` support in LovyanGFX.  
+  Displays without a connected MISO pin, or controllers that do not support readback cannot be used.  
+  Check your display wiring and panel documentation if screenshots fail.  
