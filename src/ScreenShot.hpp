@@ -21,33 +21,50 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-
-/**
- * @file ScreenShot.h
- * @brief Provides functionality to save LGFX sprites or screen content to a BMP file on SD card.
- */
-
-#ifndef SCREENSHOT_H
-#define SCREENSHOT_H
+#ifndef SCREENSHOT_HPP
+#define SCREENSHOT_HPP
 
 #include <Arduino.h>
 #include <FS.h>
 #include <LovyanGFX.h>
 #include "MemoryBuffer.hpp"
-/**
- * @class ScreenShot
- * @brief A utility class for saving LGFX screen or sprite data as BMP files to a mounted filesystem.
- */
+
+enum class ScreenShotError : uint8_t
+{
+    None = 0,
+    UnsupportedColorDepth,
+    InvalidDimensions,
+    DisplayNotReadable,
+    PixelBufferAllocFailed,
+    FileOpenFailed,
+    WriteHeaderFailed,
+    WritePixelDataFailed,
+};
+
+struct ScreenShotResult
+{
+    ScreenShotError error;
+    size_t bytesWritten;
+
+    constexpr bool ok() const
+    {
+        return error == ScreenShotError::None;
+    }
+};
+
+const char *screenShotErrorString(ScreenShotError err);
+
 class ScreenShot
 {
 public:
-    bool saveBMP(const char *filename, lgfx::LGFXBase &gfx, FS &filesystem, String &error);
-    bool saveBMP(const String &filename, lgfx::LGFXBase &gfx, FS &filesystem, String &error);
+    ScreenShotResult saveBMP(const char *filename, lgfx::LGFXBase &gfx, FS &filesystem);
+    ScreenShotResult saveBMP(const String &filename, lgfx::LGFXBase &gfx, FS &filesystem);
 
 private:
-    bool writeBMPHeader(lgfx::LGFXBase &gfx, File &file);
-    bool writeBMPPixelData(lgfx::LGFXBase &gfx, File &file, MemoryBuffer &buffer);
-    size_t rowSize_ = 0;    
+    bool writeBMPHeader(lgfx::LGFXBase &gfx, File &file, size_t &headerSize);
+    bool writeBMPPixelData(lgfx::LGFXBase &gfx, File &file, MemoryBuffer &buffer, size_t &bytesWritten);
+
+    size_t rowSize_ = 0;
 };
 
-#endif // SCREENSHOT_H
+#endif // SCREENSHOT_HPP

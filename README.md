@@ -54,27 +54,25 @@ void setup()
     if (!SD.begin(SDCARD_SS))
         Serial.println("SD Card mount failed");
 
-    String error; // returns an error message or returns unchanged on success
-
     // save a screenshot from the display
-    bool success = screenShot.saveBMP("/screenshot.bmp", display, SD, error);
-    if (!success)
-        Serial.println(error); // e.g. "Display does not support readPixel()"
+    auto result = screenShot.saveBMP("/screenshot.bmp", display, SD);
+    if (!result.ok())
+        Serial.println(screenShotErrorString(result.error));
     else
-        Serial.println("Saved screen");
+        Serial.printf("Saved screenshot: %u bytes\n", result.bytesWritten);
 
     // save a screenshot from a sprite
     LGFX_Sprite sprite;
     sprite.setPsram(true);
-    sprite.createSprite(320, 240);
+    sprite.createSprite(319, 213);
     sprite.setFont(&DejaVu24);
     sprite.drawCenterString("Sprite", sprite.width() / 2, sprite.height() / 2);
 
-    success = screenShot.saveBMP("/spriteshot.bmp", sprite, SD, error);
-    if (!success)
-        Serial.println(error); // e.g. "Failed to open file"
+    result = screenShot.saveBMP("/spriteshot.bmp", sprite, SD);
+    if (!result.ok())
+        Serial.println(screenShotErrorString(result.error));
     else
-        Serial.println("Saved sprite");
+        Serial.printf("Saved spriteshot: %u bytes\n", result.bytesWritten);
 }
 
 void loop()
@@ -85,5 +83,7 @@ void loop()
 
 ## Known issues
 
-- Some displays have no MISO pin connected or exposed, preventing them from reading pixeldata.  
-On a call to `saveBMP()` these displays will return `false` and a `Display does not support readPixel()` error message.  
+- Not all displays support pixel readback.  
+  Screenshot capture requires `readPixel()` support in LovyanGFX.  
+  Displays without a connected MISO pin, or controllers that do not support readback cannot be used.  
+  Check your display wiring and panel documentation if screenshots fail.  
