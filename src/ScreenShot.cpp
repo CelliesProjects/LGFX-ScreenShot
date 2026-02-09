@@ -24,7 +24,7 @@ SOFTWARE.
 
 #include "ScreenShot.hpp"
 
-bool ScreenShot::writeBMPHeader(lgfx::LGFXBase &gfx, File &file, size_t &headerSize)
+bool ScreenShot::writeBMPHeader(lgfx::LGFXBase &gfx, File &file, size_t &bytesWritten)
 {
     static constexpr size_t BMP_FILE_HEADER_SIZE = 14;
     static constexpr size_t BMP_INFO_HEADER_SIZE = 40;
@@ -77,8 +77,8 @@ bool ScreenShot::writeBMPHeader(lgfx::LGFXBase &gfx, File &file, size_t &headerS
     writeLE(header, 46, biClrUsed, 4);       // Colors in palette (not used)
     writeLE(header, 50, biClrImportant, 4);  // Important colors (not used)
 
-    headerSize = BMP_HEADER_SIZE;
-    return file.write(header, headerSize) == headerSize;
+    bytesWritten = file.write(header, BMP_HEADER_SIZE);
+    return bytesWritten == BMP_HEADER_SIZE;
 }
 
 bool ScreenShot::writeBMPPixelData(lgfx::LGFXBase &gfx, File &file, MemoryBuffer &buffer, size_t &bytesWritten)
@@ -109,10 +109,9 @@ bool ScreenShot::writeBMPPixelData(lgfx::LGFXBase &gfx, File &file, MemoryBuffer
             memset(buf + pixelBytes, 0, rowSize_ - pixelBytes);
 
         const size_t written = file.write(buf, rowSize_);
+        bytesWritten += written;
         if (written != rowSize_)
             return false;
-
-        bytesWritten += written;
     }
 
     return true;
@@ -148,11 +147,11 @@ ScreenShotResult ScreenShot::saveBMP(const char *filename, lgfx::LGFXBase &gfx, 
 
     size_t headerBytes = 0;
     if (!writeBMPHeader(gfx, file, headerBytes))
-        return {ScreenShotError::WriteHeaderFailed, 0};
+        return {ScreenShotError::WriteHeaderFailed, headerBytes};
 
     size_t pixelBytes = 0;
     if (!writeBMPPixelData(gfx, file, pixelBuffer, pixelBytes))
-        return {ScreenShotError::WritePixelDataFailed, 0};
+        return {ScreenShotError::WritePixelDataFailed, headerBytes + pixelBytes};
 
     return {ScreenShotError::None, headerBytes + pixelBytes};
 }
